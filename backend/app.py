@@ -1,13 +1,18 @@
 import os
-import logging
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from gemini_client import GeminiClient
+import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__, template_folder='../templates')
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, 'templates'),
+    static_folder=os.path.join(BASE_DIR, 'static')
+)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 try:
@@ -47,7 +52,6 @@ def chat():
     payload = request.get_json(silent=True) or {}
     user_message = payload.get('message', '').strip()
 
-    # Input validation
     if not user_message:
         return jsonify({'status': 'error', 'error': 'No message provided'}), 400
     if len(user_message) > 1000:
@@ -63,5 +67,4 @@ def chat():
         return jsonify({'status': 'error', 'error': 'Error generating response'}), 500
 
 if __name__ == '__main__':
-    # For production, use Gunicorn: gunicorn -w 4 app:app
     app.run(debug=os.environ.get("FLASK_DEBUG", "False") == "True")

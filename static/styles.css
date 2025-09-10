@@ -1,0 +1,51 @@
+body {
+  background-color: #f3f4f6;
+}
+.chat-container {
+  max-width: 768px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  color: #6b7280;
+}
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  margin: 0 2px;
+  background-color: #6b7280;
+  border-radius: 50%;
+  animation: typing 1s infinite ease-in-out;
+}
+@keyframes typing {
+  0%, 80%, 100% { opacity: 0.2; }
+  40% { opacity: 1; }
+}
+.message-bubble {
+  padding: 1rem;
+  border-radius: 1.5rem;
+  max-width: 80%;
+  margin-bottom: 1rem;
+  word-break: break-word;
+}
+.user-message {
+  background-color: #3b82f6;
+  color: white;
+  align-self: flex-end;
+}
+.agent-message {
+  background-color: #e5e7eb;
+  color: #374151;
+  align-self: flex-start;
+}
+/* Responsive height for mobile */
+@media (max-width: 640px) {
+  .chat-container {
+    height: 100svh;
+  }
+}

@@ -209,3 +209,6 @@ __marimo__/
 
 backend/.env
 venv/
+.codacy/
+.env
+backend/__pycache__/

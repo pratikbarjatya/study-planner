@@ -18,10 +18,32 @@ except Exception as e:
 
 @app.route('/')
 def index():
+    """
+    Renders the 'index.html' template for the application's home page.
+
+    Returns:
+        Response: The rendered HTML page for the index route.
+    """
     return render_template('index.html')
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
+    """
+    Handles chat requests by processing user messages and generating responses using an LLM client.
+
+    Returns:
+        Response: A JSON response containing either the generated reply or an error message.
+
+    Request JSON:
+        {
+            "message": "<user's message>"
+        }
+
+    Responses:
+        200: {'status': 'success', 'response': <response_text>}
+        400: {'status': 'error', 'error': 'No message provided' or 'Message too long'}
+        500: {'status': 'error', 'error': 'LLM client not available' or 'Error generating response'}
+    """
     payload = request.get_json(silent=True) or {}
     user_message = payload.get('message', '').strip()
 

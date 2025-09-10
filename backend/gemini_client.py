@@ -10,6 +10,21 @@ logging.basicConfig(level=logging.INFO)
 load_dotenv()
 
 def perform_web_search(query: str, max_results: int = 6) -> List[Dict[str, str]]:
+    """
+    Performs a DuckDuckGo web search for the given query and returns a list of search results.
+
+    Args:
+        query (str): The search query string.
+        max_results (int, optional): Maximum number of results to return. Defaults to 6.
+
+    Returns:
+        List[Dict[str, str]]: A list of dictionaries, each containing 'title', 'href', and 'body' keys
+        representing the search result's title, URL, and a brief snippet of the body text.
+
+    Notes:
+        - The body text is truncated to 300 characters for brevity.
+        - If an error occurs during the search, an empty list is returned and the error is logged.
+    """
     """Perform a DuckDuckGo search and return a list of results (title, href, body)."""
     results: List[Dict[str, str]] = []
     try:
@@ -29,7 +44,45 @@ def perform_web_search(query: str, max_results: int = 6) -> List[Dict[str, str]]
         logger.error(f"DuckDuckGo search error: {e}")
         return []
 
+"""
+This module provides a GeminiClient class for interacting with Google's Gemini generative AI model,
+with optional integration of DuckDuckGo web search results to enhance responses. It includes:
+
+Functions:
+----------
+- perform_web_search(query: str, max_results: int = 6) -> List[Dict[str, str]]:
+    Performs a DuckDuckGo search for the given query and returns a list of results containing
+    title, href, and body. Handles errors gracefully and limits body length for brevity.
+
+Classes:
+--------
+- GeminiClient:
+    A client for Google's Gemini generative AI model. Supports normal chat and enhanced responses
+    using real-time web search results when triggered by specific user input patterns ("search:" or "/search ").
+    - __init__(api_key: str = None, model_name: str = 'gemini-1.5-flash'):
+        Initializes the GeminiClient with the provided API key and model name.
+        Configures the generative model and prepares chat history.
+    - generate_response(user_input: str) -> str:
+        Generates an AI response to the user input. If the input triggers a web search,
+        performs the search, composes a context with numbered references, and instructs the AI
+        to cite sources inline. Otherwise, responds as a normal chat.
+
+Logging:
+--------
+- Uses Python's logging module to report errors and configuration issues.
+
+Environment:
+------------
+- Loads environment variables using dotenv for API key management.
+
+Dependencies:
+-------------
+- google.generativeai
+- duckduckgo_search
+- python-dotenv
+"""
 class GeminiClient:
+    """Client for interacting with the Gemini AI model, with optional web search integration."""
     def __init__(self, api_key: str = None, model_name: str = 'gemini-1.5-flash'):
         api_key = api_key or os.getenv('GEMINI_API_KEY')
         if not api_key:
